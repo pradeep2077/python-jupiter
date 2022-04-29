@@ -1,0 +1,165 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 1,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "'C:\\\\Users\\\\32831\\\\Downloads\\\\python-master'"
+      ]
+     },
+     "execution_count": 1,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "import os \n",
+    "os.getcwd()"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<imag src = \"thread.png\">"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "<img src=\"thread.png\">"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 4,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Number of cpu :  8\n"
+     ]
+    }
+   ],
+   "source": [
+    "\n",
+    "import multiprocessing\n",
+    "\n",
+    "print(\"Number of cpu : \", multiprocessing.cpu_count())\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 5,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "'http://google.com' fetched in 0.6175274848937988s\n",
+      "'http://apple.com' fetched in 1.7305123805999756s\n",
+      "'https://yahoo.com' fetched in 4.989057540893555s\n",
+      "'http://ibm.com' fetched in 5.263003349304199s\n",
+      "Elapsed Time: 5.263003349304199\n"
+     ]
+    }
+   ],
+   "source": [
+    "#!/usr/bin/env python\n",
+    "from multiprocessing.pool import ThreadPool\n",
+    "from time import time as timer\n",
+    "import urllib.request\n",
+    "\n",
+    "urls = [\"https://yahoo.com\", \"http://google.com\",\"http://ibm.com\", \"http://apple.com\"]\n",
+    "\n",
+    "def fetch_url(url):\n",
+    "    try:\n",
+    "        response = urllib.request.urlopen(url)\n",
+    "        return url, response.read(), None\n",
+    "    except Exception as e:\n",
+    "        return url, None, e\n",
+    "\n",
+    "start = timer()\n",
+    "results = ThreadPool(20).imap_unordered(fetch_url, urls)\n",
+    "for url, html, error in results:\n",
+    "    if error is None:\n",
+    "        print(\"%r fetched in %ss\" % (url, timer() - start))\n",
+    "    else:\n",
+    "        print(\"error fetching %r: %s\" % (url, error))\n",
+    "print(\"Elapsed Time: %s\" % (timer() - start,))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 9,
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "<Process(Process-3, initial)>\n"
+     ]
+    }
+   ],
+   "source": [
+    "import multiprocessing\n",
+    "def calc_square(number):\n",
+    "    print('Square:' , number * number)\n",
+    "    result = number * number\n",
+    "    print(result)\n",
+    "def calc_quad(number):\n",
+    "    print('Quad:' , number * number * number * number)\n",
+    "if __name__ == \"__main__\":\n",
+    "    number = 7\n",
+    "    #result = None\n",
+    "    p1 = multiprocessing.Process(target=calc_square, args=(number,))\n",
+    "    print(p1)\n",
+    "    p2 = multiprocessing.Process(target=calc_quad, args=(number,))\n",
+    "    p1.start()\n",
+    "    p2.start()\n",
+    "    p1.join()\n",
+    "    p2.join()\n",
+    "    \n",
+    "    # Wont print because processes run using their own memory location                     \n",
+    "    #print(result)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.9.7"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
